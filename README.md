@@ -1,3 +1,1 @@
 ﻿# Reclamos-de-Indecopi
-
-El modelo en Promela simula la lógica de sincronización del detector concurrente antes de que este sea implementado en Go. 
