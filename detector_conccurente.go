@@ -2,20 +2,22 @@ package main
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+	"unicode"
 )
 
 const (
-	UMBRAL_SPAM      = 5
 	UMBRAL_PICO      = 5
-	NUM_EJECUCIONES  = 10
+	NUM_EJECUCIONES  = 100
 	PORCENTAJE_CORTE = 20
 )
 
@@ -25,30 +27,67 @@ type Reclamo struct {
 	TsValido   bool
 	TsRaw      string
 	Materia    string
+	Texto      string
 	Denunciado string
+}
+
+type Clasificacion struct {
+	IDReclamo        string
+	Clasificacion    string
+	SeñalesActivadas []string
+	TotalSeñales     int
 }
 
 type Resultado struct {
-	AlertasSpam   int
-	AlertasRafaga int
-	TotalAlertas  int
-}
-
-type ResultadoParcial struct {
-	ConteoTexto     map[string]int
-	TsPorDenunciado map[string][]time.Time
-}
-
-type GrupoTimestamps struct {
-	Denunciado string
-	Timestamps []time.Time
+	TotalHumano     int
+	TotalSospechoso int
+	TotalBot        int
+	TotalAlertas    int
 }
 
 type Lote struct {
-	ID     int
 	Inicio int
 	Fin    int
 }
+
+type IndiceParcial struct {
+	ConteoTextos     map[string]int
+	TsPorDenunciado map[string][]time.Time
+}
+
+type ResultadoParcial struct {
+	TotalHumano     int
+	TotalSospechoso int
+	TotalBot        int
+}
+
+type EjecucionLog struct {
+	Run             int     `json:"run"`
+	TiempoS         float64 `json:"tiempo_s"`
+	TotalHumano     int     `json:"total_humano"`
+	TotalSospechoso int     `json:"total_sospechoso"`
+	TotalBot        int     `json:"total_bot"`
+	TotalAlertas    int     `json:"total_alertas"`
+	HeapMB          float64 `json:"heap_mb"`
+}
+
+type LogFinal struct {
+	Version          string         `json:"version"`
+	Fecha            string         `json:"fecha"`
+	TotalFilas       int            `json:"total_filas"`
+	TotalEjecuciones int            `json:"total_ejecuciones"`
+	TiempoMinS       float64        `json:"tiempo_min_s"`
+	TiempoMaxS       float64        `json:"tiempo_max_s"`
+	MediaRecortadaS  float64        `json:"media_recortada_s"`
+	HeapAntesM       float64        `json:"heap_antes_mb"`
+	HeapDespuesM     float64        `json:"heap_despues_mb"`
+	NucleosCPU       int            `json:"nucleos_cpu"`
+	Workers          int            `json:"workers"`
+	TamañoLote       int            `json:"tamano_lote"`
+	Ejecuciones      []EjecucionLog `json:"ejecuciones"`
+}
+
+var reFormatoCodigo = regexp.MustCompile(`[A-Z]{2,}_[A-Z]{2,}`)
 
 func leerCSV(ruta string) ([]Reclamo, error) {
 	f, err := os.Open(ruta)
@@ -59,18 +98,25 @@ func leerCSV(ruta string) ([]Reclamo, error) {
 
 	reader := csv.NewReader(f)
 	reader.LazyQuotes = true
+	reader.FieldsPerRecord = -1
 
 	if _, err := reader.Read(); err != nil {
 		return nil, err
 	}
 
 	var filas []Reclamo
+	lineNum := 1
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
 			break
 		}
-		if err != nil || len(record) < 7 {
+		if err != nil {
+			lineNum++
+			continue
+		}
+		lineNum++
+		if len(record) < 9 {
 			continue
 		}
 
@@ -78,12 +124,13 @@ func leerCSV(ruta string) ([]Reclamo, error) {
 			IDReclamo:  strings.TrimSpace(record[0]),
 			TsRaw:      strings.TrimSpace(record[1]),
 			Materia:    strings.TrimSpace(record[3]),
-			Denunciado: strings.TrimSpace(record[4]),
+			Texto:      strings.TrimSpace(record[4]),
+			Denunciado: strings.TrimSpace(record[6]),
 		}
 
 		if r.TsRaw != "" {
 			t, err := time.Parse("02/01/2006 15:04:05", r.TsRaw)
-			if err != nil && len(r.TsRaw) >= 10 {
+			if err != nil {
 				t, err = time.Parse("02/01/2006", r.TsRaw[:10])
 			}
 			if err == nil {
@@ -98,49 +145,72 @@ func leerCSV(ruta string) ([]Reclamo, error) {
 	return filas, nil
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
+func señalTextoIdentico(texto string, conteoTextos map[string]int) bool {
+	if texto == "" {
+		return false
 	}
-	return b
+	return conteoTextos[texto] > 1
 }
 
-func procesarLote(filas []Reclamo) ResultadoParcial {
-	conteoTexto := make(map[string]int)
-	tsPorDenunciado := make(map[string][]time.Time)
-
-	for _, r := range filas {
-		if r.Materia != "" && r.Denunciado != "" {
-			clave := r.Materia + "|" + r.Denunciado
-			conteoTexto[clave]++
-		}
-
-		if r.TsValido && r.Denunciado != "" {
-			tsPorDenunciado[r.Denunciado] = append(tsPorDenunciado[r.Denunciado], r.Timestamp)
+func señalSoloMayusculas(texto string) bool {
+	if texto == "" {
+		return false
+	}
+	for _, r := range texto {
+		if unicode.IsLetter(r) && unicode.IsLower(r) {
+			return false
 		}
 	}
-
-	return ResultadoParcial{
-		ConteoTexto:     conteoTexto,
-		TsPorDenunciado: tsPorDenunciado,
-	}
+	return true
 }
 
-func contarSpam(conteoTexto map[string]int) int {
-	alertas := 0
-	for _, conteo := range conteoTexto {
-		if conteo >= UMBRAL_SPAM {
-			alertas++
+func señalSinPuntuacion(texto string) bool {
+	if texto == "" {
+		return false
+	}
+	for _, r := range texto {
+		if r == '.' || r == ',' || r == '!' || r == '?' || r == ';' || r == ':' {
+			return false
 		}
 	}
-	return alertas
+	return true
 }
 
-func tieneRafaga(timestamps []time.Time) bool {
-	sort.Slice(timestamps, func(i, j int) bool {
-		return timestamps[i].Before(timestamps[j])
-	})
+func señalCaracteresEspeciales(texto string) bool {
+	if texto == "" {
+		return false
+	}
+	total := 0
+	especiales := 0
+	for _, r := range texto {
+		total++
+		if !unicode.IsLetter(r) && !unicode.IsSpace(r) {
+			especiales++
+		}
+	}
+	if total == 0 {
+		return false
+	}
+	return float64(especiales)/float64(total) > 0.30
+}
 
+func señalPalabraLarga(texto string) bool {
+	for _, palabra := range strings.Fields(texto) {
+		if len([]rune(palabra)) > 20 {
+			return true
+		}
+	}
+	return false
+}
+
+func señalFormatoCodigo(texto string) bool {
+	return reFormatoCodigo.MatchString(texto)
+}
+
+func señalRafaga(timestamps []time.Time) bool {
+	if len(timestamps) < UMBRAL_PICO {
+		return false
+	}
 	inicio := 0
 	for fin := 0; fin < len(timestamps); fin++ {
 		for timestamps[fin].Sub(timestamps[inicio]) > time.Hour {
@@ -150,87 +220,169 @@ func tieneRafaga(timestamps []time.Time) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
-func contarRafagasConcurrente(tsPorDenunciado map[string][]time.Time, numWorkers int) int {
-	trabajos := make(chan GrupoTimestamps)
-	resultados := make(chan int, numWorkers)
-
-	var wg sync.WaitGroup
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			alertasLocales := 0
-			for grupo := range trabajos {
-				if tieneRafaga(grupo.Timestamps) {
-					alertasLocales++
-				}
-			}
-			resultados <- alertasLocales
-		}()
+func señalRafagaPrecalculada(denunciado string, denunciadosConRafaga map[string]bool) bool {
+	if denunciado == "" {
+		return false
 	}
-
-	go func() {
-		for denunciado, timestamps := range tsPorDenunciado {
-			trabajos <- GrupoTimestamps{
-				Denunciado: denunciado,
-				Timestamps: timestamps,
-			}
-		}
-		close(trabajos)
-		wg.Wait()
-		close(resultados)
-	}()
-
-	total := 0
-	for parcial := range resultados {
-		total += parcial
-	}
-
-	return total
+	return denunciadosConRafaga[denunciado]
 }
 
-func detectarConcurrente(filas []Reclamo, numWorkers int) Resultado {
-	if numWorkers < 1 {
-		numWorkers = 1
-	}
-	if len(filas) == 0 {
-		return Resultado{}
-	}
-	numWorkers = min(numWorkers, len(filas))
+func clasificar(r Reclamo, conteoTextos map[string]int, denunciadosConRafaga map[string]bool) Clasificacion {
+	var señales []string
 
-	lotes := make(chan Lote, numWorkers)
-	resultados := make(chan ResultadoParcial, numWorkers)
+	if señalTextoIdentico(r.Texto, conteoTextos) {
+		señales = append(señales, "texto_identico")
+	}
+	if señalSoloMayusculas(r.Texto) {
+		señales = append(señales, "solo_mayusculas")
+	}
+	if señalSinPuntuacion(r.Texto) {
+		señales = append(señales, "sin_puntuacion")
+	}
+	if señalCaracteresEspeciales(r.Texto) {
+		señales = append(señales, "caracteres_especiales")
+	}
+	if señalPalabraLarga(r.Texto) {
+		señales = append(señales, "palabra_larga")
+	}
+	if señalFormatoCodigo(r.Texto) {
+		señales = append(señales, "formato_codigo")
+	}
+	if r.TsValido && señalRafagaPrecalculada(r.Denunciado, denunciadosConRafaga) {
+		señales = append(señales, "rafaga_tiempo")
+	}
+
+	total := len(señales)
+	clasificacion := "HUMANO"
+	if total >= 4 {
+		clasificacion = "BOT"
+	} else if total >= 2 {
+		clasificacion = "SOSPECHOSO"
+	}
+
+	return Clasificacion{
+		IDReclamo:        r.IDReclamo,
+		Clasificacion:    clasificacion,
+		SeñalesActivadas: señales,
+		TotalSeñales:     total,
+	}
+}
+
+func normalizarWorkers(workers int) int {
+	if workers < 1 {
+		return 1
+	}
+	return workers
+}
+
+func calcularTamañoLote(totalFilas int, workers int) int {
+	workers = normalizarWorkers(workers)
+	tamaño := totalFilas / (workers * 8)
+	if tamaño < 1000 {
+		return 1000
+	}
+	if tamaño > 50000 {
+		return 50000
+	}
+	return tamaño
+}
+
+func enviarLotes(totalFilas int, tamañoLote int, lotes chan<- Lote) {
+	defer close(lotes)
+	for inicio := 0; inicio < totalFilas; inicio += tamañoLote {
+		fin := inicio + tamañoLote
+		if fin > totalFilas {
+			fin = totalFilas
+		}
+		lotes <- Lote{Inicio: inicio, Fin: fin}
+	}
+}
+
+func construirIndicesConcurrente(filas []Reclamo, workers int, tamañoLote int) (map[string]int, map[string][]time.Time) {
+	workers = normalizarWorkers(workers)
+	lotes := make(chan Lote, workers*2)
+	parciales := make(chan IndiceParcial, workers)
+
 	var wg sync.WaitGroup
-
-	for i := 0; i < numWorkers; i++ {
+	for i := 0; i < workers; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 
+			conteoTextosLocal := make(map[string]int)
+			tsPorDenunciadoLocal := make(map[string][]time.Time)
+
 			for lote := range lotes {
-				resultados <- procesarLote(filas[lote.Inicio:lote.Fin])
+				for j := lote.Inicio; j < lote.Fin; j++ {
+					r := filas[j]
+					if r.Texto != "" {
+						conteoTextosLocal[r.Texto]++
+					}
+					if r.TsValido && r.Denunciado != "" {
+						tsPorDenunciadoLocal[r.Denunciado] = append(tsPorDenunciadoLocal[r.Denunciado], r.Timestamp)
+					}
+				}
+			}
+
+			parciales <- IndiceParcial{
+				ConteoTextos:     conteoTextosLocal,
+				TsPorDenunciado: tsPorDenunciadoLocal,
+			}
+		}()
+	}
+
+	go enviarLotes(len(filas), tamañoLote, lotes)
+
+	go func() {
+		wg.Wait()
+		close(parciales)
+	}()
+
+	conteoTextos := make(map[string]int)
+	tsPorDenunciado := make(map[string][]time.Time)
+
+	for parcial := range parciales {
+		for texto, conteo := range parcial.ConteoTextos {
+			conteoTextos[texto] += conteo
+		}
+		for denunciado, timestamps := range parcial.TsPorDenunciado {
+			tsPorDenunciado[denunciado] = append(tsPorDenunciado[denunciado], timestamps...)
+		}
+	}
+
+	return conteoTextos, tsPorDenunciado
+}
+
+func calcularRafagasConcurrente(tsPorDenunciado map[string][]time.Time, workers int) map[string]bool {
+	workers = normalizarWorkers(workers)
+	trabajos := make(chan string, workers*2)
+	resultados := make(chan string, workers)
+
+	var wg sync.WaitGroup
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for denunciado := range trabajos {
+				timestamps := tsPorDenunciado[denunciado]
+				sort.Slice(timestamps, func(i, j int) bool {
+					return timestamps[i].Before(timestamps[j])
+				})
+				if señalRafaga(timestamps) {
+					resultados <- denunciado
+				}
 			}
 		}()
 	}
 
 	go func() {
-		tamanoLote := (len(filas) + numWorkers - 1) / numWorkers
-		id := 0
-		for inicio := 0; inicio < len(filas); inicio += tamanoLote {
-			fin := min(inicio+tamanoLote, len(filas))
-			lotes <- Lote{
-				ID:     id,
-				Inicio: inicio,
-				Fin:    fin,
-			}
-			id++
+		for denunciado := range tsPorDenunciado {
+			trabajos <- denunciado
 		}
-		close(lotes)
+		close(trabajos)
 	}()
 
 	go func() {
@@ -238,26 +390,65 @@ func detectarConcurrente(filas []Reclamo, numWorkers int) Resultado {
 		close(resultados)
 	}()
 
-	conteoTextoGlobal := make(map[string]int)
-	tsPorDenunciadoGlobal := make(map[string][]time.Time)
-
-	for parcial := range resultados {
-		for clave, conteo := range parcial.ConteoTexto {
-			conteoTextoGlobal[clave] += conteo
-		}
-		for denunciado, timestamps := range parcial.TsPorDenunciado {
-			tsPorDenunciadoGlobal[denunciado] = append(tsPorDenunciadoGlobal[denunciado], timestamps...)
-		}
+	denunciadosConRafaga := make(map[string]bool)
+	for denunciado := range resultados {
+		denunciadosConRafaga[denunciado] = true
 	}
 
-	alertasSpam := contarSpam(conteoTextoGlobal)
-	alertasRafaga := contarRafagasConcurrente(tsPorDenunciadoGlobal, numWorkers)
+	return denunciadosConRafaga
+}
 
-	return Resultado{
-		AlertasSpam:   alertasSpam,
-		AlertasRafaga: alertasRafaga,
-		TotalAlertas:  alertasSpam + alertasRafaga,
+func clasificarConcurrente(filas []Reclamo, conteoTextos map[string]int, denunciadosConRafaga map[string]bool, workers int, tamañoLote int) Resultado {
+	workers = normalizarWorkers(workers)
+	lotes := make(chan Lote, workers*2)
+	parciales := make(chan ResultadoParcial, workers)
+
+	var wg sync.WaitGroup
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			parcial := ResultadoParcial{}
+			for lote := range lotes {
+				for j := lote.Inicio; j < lote.Fin; j++ {
+					c := clasificar(filas[j], conteoTextos, denunciadosConRafaga)
+					switch c.Clasificacion {
+					case "BOT":
+						parcial.TotalBot++
+					case "SOSPECHOSO":
+						parcial.TotalSospechoso++
+					default:
+						parcial.TotalHumano++
+					}
+				}
+			}
+			parciales <- parcial
+		}()
 	}
+
+	go enviarLotes(len(filas), tamañoLote, lotes)
+
+	go func() {
+		wg.Wait()
+		close(parciales)
+	}()
+
+	resultado := Resultado{}
+	for parcial := range parciales {
+		resultado.TotalBot += parcial.TotalBot
+		resultado.TotalSospechoso += parcial.TotalSospechoso
+		resultado.TotalHumano += parcial.TotalHumano
+	}
+
+	resultado.TotalAlertas = resultado.TotalBot + resultado.TotalSospechoso
+	return resultado
+}
+
+func detectarConcurrente(filas []Reclamo, workers int, tamañoLote int) Resultado {
+	conteoTextos, tsPorDenunciado := construirIndicesConcurrente(filas, workers, tamañoLote)
+	denunciadosConRafaga := calcularRafagasConcurrente(tsPorDenunciado, workers)
+	return clasificarConcurrente(filas, conteoTextos, denunciadosConRafaga, workers, tamañoLote)
 }
 
 func mediaRecortada(tiempos []float64, pct int) float64 {
@@ -278,7 +469,8 @@ func mediaRecortada(tiempos []float64, pct int) float64 {
 
 func main() {
 	inputFile := "dataset_indecopi_limpio.csv"
-	numWorkers := runtime.NumCPU()
+	logFile := "logs_concurrente.json"
+	workers := runtime.NumCPU()
 
 	filas, err := leerCSV(inputFile)
 	if err != nil {
@@ -286,27 +478,50 @@ func main() {
 		os.Exit(1)
 	}
 
+	tamañoLote := calcularTamañoLote(len(filas), workers)
+
 	conTs := 0
 	for _, r := range filas {
 		if r.TsValido {
 			conTs++
 		}
 	}
-	fmt.Printf("%d filas | %d con timestamp (%.1f%%)\n\n",
+	fmt.Printf("%d filas | %d con timestamp (%.1f%%)\n",
 		len(filas), conTs, float64(conTs)/float64(len(filas))*100)
+	fmt.Printf("workers: %d | tamaño lote: %d\n\n", workers, tamañoLote)
 
 	var memAntes runtime.MemStats
 	runtime.ReadMemStats(&memAntes)
 
 	tiempos := make([]float64, NUM_EJECUCIONES)
+	logs := make([]EjecucionLog, NUM_EJECUCIONES)
 	var ultimoResultado Resultado
 
 	for i := 0; i < NUM_EJECUCIONES; i++ {
+		var memRun runtime.MemStats
+		runtime.ReadMemStats(&memRun)
+
 		inicio := time.Now()
-		ultimoResultado = detectarConcurrente(filas, numWorkers)
+		ultimoResultado = detectarConcurrente(filas, workers, tamañoLote)
 		elapsed := time.Since(inicio).Seconds()
 		tiempos[i] = elapsed
-		fmt.Printf("run %2d: %.4f s | alertas: %d\n", i+1, elapsed, ultimoResultado.TotalAlertas)
+
+		var memPost runtime.MemStats
+		runtime.ReadMemStats(&memPost)
+
+		logs[i] = EjecucionLog{
+			Run:             i + 1,
+			TiempoS:         elapsed,
+			TotalHumano:     ultimoResultado.TotalHumano,
+			TotalSospechoso: ultimoResultado.TotalSospechoso,
+			TotalBot:        ultimoResultado.TotalBot,
+			TotalAlertas:    ultimoResultado.TotalAlertas,
+			HeapMB:          float64(memPost.HeapAlloc) / 1024 / 1024,
+		}
+
+		fmt.Printf("run %3d: %.4f s | bot: %d | sospechoso: %d | humano: %d\n",
+			i+1, elapsed, ultimoResultado.TotalBot,
+			ultimoResultado.TotalSospechoso, ultimoResultado.TotalHumano)
 	}
 
 	var memDespues runtime.MemStats
@@ -318,9 +533,36 @@ func main() {
 	copy(sorted, tiempos)
 	sort.Float64s(sorted)
 
-	fmt.Printf("\nspam:   %d\n", ultimoResultado.AlertasSpam)
-	fmt.Printf("rafaga: %d\n", ultimoResultado.AlertasRafaga)
-	fmt.Printf("total:  %d\n", ultimoResultado.TotalAlertas)
+	logData := LogFinal{
+		Version:          "concurrente",
+		Fecha:            time.Now().Format("02/01/2006 15:04:05"),
+		TotalFilas:       len(filas),
+		TotalEjecuciones: NUM_EJECUCIONES,
+		TiempoMinS:       sorted[0],
+		TiempoMaxS:       sorted[len(sorted)-1],
+		MediaRecortadaS:  media,
+		HeapAntesM:       float64(memAntes.HeapAlloc) / 1024 / 1024,
+		HeapDespuesM:     float64(memDespues.HeapAlloc) / 1024 / 1024,
+		NucleosCPU:       runtime.NumCPU(),
+		Workers:          workers,
+		TamañoLote:       tamañoLote,
+		Ejecuciones:      logs,
+	}
+
+	jsonBytes, err := json.MarshalIndent(logData, "", "  ")
+	if err != nil {
+		fmt.Printf("error generando JSON: %v\n", err)
+		os.Exit(1)
+	}
+	if err := os.WriteFile(logFile, jsonBytes, 0644); err != nil {
+		fmt.Printf("error escribiendo JSON: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nbot:        %d\n", ultimoResultado.TotalBot)
+	fmt.Printf("sospechoso: %d\n", ultimoResultado.TotalSospechoso)
+	fmt.Printf("humano:     %d\n", ultimoResultado.TotalHumano)
+	fmt.Printf("alertas:    %d\n", ultimoResultado.TotalAlertas)
 
 	fmt.Printf("\nmin:             %.4f s\n", sorted[0])
 	fmt.Printf("max:             %.4f s\n", sorted[len(sorted)-1])
@@ -328,6 +570,8 @@ func main() {
 
 	fmt.Printf("\nheap antes:   %.2f MB\n", float64(memAntes.HeapAlloc)/1024/1024)
 	fmt.Printf("heap despues: %.2f MB\n", float64(memDespues.HeapAlloc)/1024/1024)
-	fmt.Printf("total aloc:   %.2f MB\n", float64(memDespues.TotalAlloc)/1024/1024)
 	fmt.Printf("nucleos:      %d\n", runtime.NumCPU())
+	fmt.Printf("workers:      %d\n", workers)
+	fmt.Printf("tamaño lote:  %d\n", tamañoLote)
+	fmt.Printf("\nlogs guardados en: %s\n", logFile)
 }
