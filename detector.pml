@@ -1,10 +1,21 @@
 #define NUM_WORKERS  2
 #define NUM_LOTES    3
-#define UMBRAL_SPAM  3    
-#define UMBRAL_PICO  5   
+#define UMBRAL_SPAM  3
+#define UMBRAL_PICO  5
 
 int  alertas_global = 0;
 chan lotes_canal = [NUM_LOTES] of { int };
+
+#define en_seccion_critica_0 (worker[0]@seccion_critica)
+#define en_seccion_critica_1 (worker[1]@seccion_critica)
+
+ltl exclusion_mutua {
+    [] !(en_seccion_critica_0 && en_seccion_critica_1)
+}
+
+ltl sin_deadlock {
+    [] <> (alertas_global >= 0)
+}
 
 active proctype dispatcher() {
     int i = 0;
@@ -29,8 +40,8 @@ active proctype dispatcher() {
 
 active [NUM_WORKERS] proctype worker() {
     int lote_id;
-    int conteo_texto;  
-    int conteo_pico;    
+    int conteo_texto;
+    int conteo_pico;
     int alertas_spam;
     int alertas_pico;
     int alertas_locales;
@@ -43,8 +54,8 @@ active [NUM_WORKERS] proctype worker() {
         :: else ->
 
             if
-            :: conteo_texto = 2    
-            :: conteo_texto = 4    
+            :: conteo_texto = 2
+            :: conteo_texto = 4
             fi;
 
             if
@@ -53,8 +64,8 @@ active [NUM_WORKERS] proctype worker() {
             fi;
 
             if
-            :: conteo_pico = 3    
-            :: conteo_pico = 6    
+            :: conteo_pico = 3
+            :: conteo_pico = 6
             fi;
 
             if
@@ -66,6 +77,7 @@ active [NUM_WORKERS] proctype worker() {
 
             if
             :: alertas_locales > 0 ->
+seccion_critica:
                 atomic {
                     alertas_global = alertas_global + alertas_locales
                 }
