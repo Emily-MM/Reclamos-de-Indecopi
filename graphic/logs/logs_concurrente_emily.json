@@ -1,0 +1,916 @@
+{
+  "version": "concurrente",
+  "fecha": "10/05/2026 11:27:35",
+  "total_filas": 1216096,
+  "total_ejecuciones": 100,
+  "tiempo_min_s": 2.9194705,
+  "tiempo_max_s": 12.9135242,
+  "media_recortada_s": 5.817450299999999,
+  "heap_antes_mb": 636.7139358520508,
+  "heap_despues_mb": 973.9756546020508,
+  "nucleos_cpu": 8,
+  "workers": 8,
+  "tamano_lote": 19001,
+  "ejecuciones": [
+    {
+      "run": 1,
+      "tiempo_s": 9.6261826,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 858.1306762695312
+    },
+    {
+      "run": 2,
+      "tiempo_s": 8.0911815,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 929.9944458007812
+    },
+    {
+      "run": 3,
+      "tiempo_s": 8.6558185,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1005.6440124511719
+    },
+    {
+      "run": 4,
+      "tiempo_s": 9.6124987,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1144.8529968261719
+    },
+    {
+      "run": 5,
+      "tiempo_s": 7.2757289,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1270.7154083251953
+    },
+    {
+      "run": 6,
+      "tiempo_s": 6.4670454,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 732.7581634521484
+    },
+    {
+      "run": 7,
+      "tiempo_s": 8.6450211,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 921.3443298339844
+    },
+    {
+      "run": 8,
+      "tiempo_s": 8.4421265,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1106.2496795654297
+    },
+    {
+      "run": 9,
+      "tiempo_s": 7.85645,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1197.2344970703125
+    },
+    {
+      "run": 10,
+      "tiempo_s": 8.4788551,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 670.1474609375
+    },
+    {
+      "run": 11,
+      "tiempo_s": 5.1034977,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 783.7109832763672
+    },
+    {
+      "run": 12,
+      "tiempo_s": 8.688976,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 937.2515106201172
+    },
+    {
+      "run": 13,
+      "tiempo_s": 8.1700471,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1026.8524169921875
+    },
+    {
+      "run": 14,
+      "tiempo_s": 7.5726665,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1132.3682098388672
+    },
+    {
+      "run": 15,
+      "tiempo_s": 7.6847046,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1257.3798065185547
+    },
+    {
+      "run": 16,
+      "tiempo_s": 6.5902402,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 684.9766235351562
+    },
+    {
+      "run": 17,
+      "tiempo_s": 8.5606447,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 812.5615081787109
+    },
+    {
+      "run": 18,
+      "tiempo_s": 7.676435,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 901.4823150634766
+    },
+    {
+      "run": 19,
+      "tiempo_s": 7.8320292,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1000.1417541503906
+    },
+    {
+      "run": 20,
+      "tiempo_s": 8.835836,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1124.8290710449219
+    },
+    {
+      "run": 21,
+      "tiempo_s": 8.0489296,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1235.6836242675781
+    },
+    {
+      "run": 22,
+      "tiempo_s": 7.3740708999999995,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 992.3181610107422
+    },
+    {
+      "run": 23,
+      "tiempo_s": 7.3838916,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 788.099365234375
+    },
+    {
+      "run": 24,
+      "tiempo_s": 8.2991272,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 872.4910736083984
+    },
+    {
+      "run": 25,
+      "tiempo_s": 7.5336047,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 986.2241363525391
+    },
+    {
+      "run": 26,
+      "tiempo_s": 7.9702629,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1073.9973449707031
+    },
+    {
+      "run": 27,
+      "tiempo_s": 7.4122406,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1170.1162109375
+    },
+    {
+      "run": 28,
+      "tiempo_s": 8.4387309,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1284.9622344970703
+    },
+    {
+      "run": 29,
+      "tiempo_s": 8.7405975,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 751.1053009033203
+    },
+    {
+      "run": 30,
+      "tiempo_s": 6.2572913,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 778.9348449707031
+    },
+    {
+      "run": 31,
+      "tiempo_s": 10.413471,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 927.5861053466797
+    },
+    {
+      "run": 32,
+      "tiempo_s": 8.0805662,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1284.7977600097656
+    },
+    {
+      "run": 33,
+      "tiempo_s": 8.0228868,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 688.5509643554688
+    },
+    {
+      "run": 34,
+      "tiempo_s": 7.918777,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 803.1590423583984
+    },
+    {
+      "run": 35,
+      "tiempo_s": 7.9283819,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 900.2971343994141
+    },
+    {
+      "run": 36,
+      "tiempo_s": 7.4949183999999995,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 998.1864166259766
+    },
+    {
+      "run": 37,
+      "tiempo_s": 7.7730335,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1116.2206268310547
+    },
+    {
+      "run": 38,
+      "tiempo_s": 7.1998475,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1234.1053619384766
+    },
+    {
+      "run": 39,
+      "tiempo_s": 7.399965,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1286.5326690673828
+    },
+    {
+      "run": 40,
+      "tiempo_s": 6.9472569,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 778.6406707763672
+    },
+    {
+      "run": 41,
+      "tiempo_s": 7.6263515,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 866.63134765625
+    },
+    {
+      "run": 42,
+      "tiempo_s": 7.6845502,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 947.8219451904297
+    },
+    {
+      "run": 43,
+      "tiempo_s": 7.0086134,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1046.4075317382812
+    },
+    {
+      "run": 44,
+      "tiempo_s": 7.0219806,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1137.7635650634766
+    },
+    {
+      "run": 45,
+      "tiempo_s": 6.9129145,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1249.109878540039
+    },
+    {
+      "run": 46,
+      "tiempo_s": 7.1005208,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 673.7461242675781
+    },
+    {
+      "run": 47,
+      "tiempo_s": 7.3112865,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 835.6339874267578
+    },
+    {
+      "run": 48,
+      "tiempo_s": 7.7964302,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 931.5555267333984
+    },
+    {
+      "run": 49,
+      "tiempo_s": 8.2078805,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1045.7232360839844
+    },
+    {
+      "run": 50,
+      "tiempo_s": 12.9135242,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1156.2774200439453
+    },
+    {
+      "run": 51,
+      "tiempo_s": 7.3484538,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 707.8941040039062
+    },
+    {
+      "run": 52,
+      "tiempo_s": 3.254828,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 790.6266937255859
+    },
+    {
+      "run": 53,
+      "tiempo_s": 3.3505352999999998,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 856.8415069580078
+    },
+    {
+      "run": 54,
+      "tiempo_s": 3.0684524,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 958.0501403808594
+    },
+    {
+      "run": 55,
+      "tiempo_s": 3.0883981,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1115.9416809082031
+    },
+    {
+      "run": 56,
+      "tiempo_s": 3.0285185,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1290.4738464355469
+    },
+    {
+      "run": 57,
+      "tiempo_s": 3.2705997,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 705.7063293457031
+    },
+    {
+      "run": 58,
+      "tiempo_s": 3.2538465,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 812.44140625
+    },
+    {
+      "run": 59,
+      "tiempo_s": 2.9194705,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 882.3806915283203
+    },
+    {
+      "run": 60,
+      "tiempo_s": 3.4783692,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1006.4402923583984
+    },
+    {
+      "run": 61,
+      "tiempo_s": 4.5752691,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1036.2722473144531
+    },
+    {
+      "run": 62,
+      "tiempo_s": 4.3234393,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1057.448013305664
+    },
+    {
+      "run": 63,
+      "tiempo_s": 4.0071859,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1293.6305236816406
+    },
+    {
+      "run": 64,
+      "tiempo_s": 3.9541766000000003,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 750.6048278808594
+    },
+    {
+      "run": 65,
+      "tiempo_s": 4.083966,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 860.3079528808594
+    },
+    {
+      "run": 66,
+      "tiempo_s": 4.1190386,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 899.5152893066406
+    },
+    {
+      "run": 67,
+      "tiempo_s": 4.0827291,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1138.4087371826172
+    },
+    {
+      "run": 68,
+      "tiempo_s": 3.9408346,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1265.3071594238281
+    },
+    {
+      "run": 69,
+      "tiempo_s": 4.141606,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 776.3182220458984
+    },
+    {
+      "run": 70,
+      "tiempo_s": 4.1262367,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 876.29345703125
+    },
+    {
+      "run": 71,
+      "tiempo_s": 4.0975922,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1023.4817047119141
+    },
+    {
+      "run": 72,
+      "tiempo_s": 4.2107395,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1125.7002563476562
+    },
+    {
+      "run": 73,
+      "tiempo_s": 4.3710396,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1090.7653198242188
+    },
+    {
+      "run": 74,
+      "tiempo_s": 4.2808211,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1239.721939086914
+    },
+    {
+      "run": 75,
+      "tiempo_s": 4.2324388,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1224.6947784423828
+    },
+    {
+      "run": 76,
+      "tiempo_s": 4.3083725,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 809.5844192504883
+    },
+    {
+      "run": 77,
+      "tiempo_s": 3.9598597,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 910.6440200805664
+    },
+    {
+      "run": 78,
+      "tiempo_s": 4.0438519,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 991.6342544555664
+    },
+    {
+      "run": 79,
+      "tiempo_s": 4.5526479,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1085.0839614868164
+    },
+    {
+      "run": 80,
+      "tiempo_s": 4.1852901,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1275.6494369506836
+    },
+    {
+      "run": 81,
+      "tiempo_s": 4.2663772,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 781.5938949584961
+    },
+    {
+      "run": 82,
+      "tiempo_s": 4.2624835,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 878.6197280883789
+    },
+    {
+      "run": 83,
+      "tiempo_s": 4.2405406,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 989.9981002807617
+    },
+    {
+      "run": 84,
+      "tiempo_s": 4.2723207,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1106.0219345092773
+    },
+    {
+      "run": 85,
+      "tiempo_s": 4.1452379,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1178.1285934448242
+    },
+    {
+      "run": 86,
+      "tiempo_s": 4.2209291,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1280.5232772827148
+    },
+    {
+      "run": 87,
+      "tiempo_s": 4.2026442,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 743.1705703735352
+    },
+    {
+      "run": 88,
+      "tiempo_s": 4.1599788,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 847.7444381713867
+    },
+    {
+      "run": 89,
+      "tiempo_s": 4.0413883,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 945.2173233032227
+    },
+    {
+      "run": 90,
+      "tiempo_s": 4.076338,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1026.7779006958008
+    },
+    {
+      "run": 91,
+      "tiempo_s": 4.0838081,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1141.2133102416992
+    },
+    {
+      "run": 92,
+      "tiempo_s": 4.0585439,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1225.590919494629
+    },
+    {
+      "run": 93,
+      "tiempo_s": 4.2126166,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 822.6486129760742
+    },
+    {
+      "run": 94,
+      "tiempo_s": 4.1999025,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 956.6781387329102
+    },
+    {
+      "run": 95,
+      "tiempo_s": 3.9971193,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1080.5127182006836
+    },
+    {
+      "run": 96,
+      "tiempo_s": 4.0444532,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 1206.368263244629
+    },
+    {
+      "run": 97,
+      "tiempo_s": 4.171499,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 678.9258651733398
+    },
+    {
+      "run": 98,
+      "tiempo_s": 4.2084001,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 794.9570541381836
+    },
+    {
+      "run": 99,
+      "tiempo_s": 4.1450043,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 893.599250793457
+    },
+    {
+      "run": 100,
+      "tiempo_s": 4.1833368,
+      "total_humano": 220918,
+      "total_sospechoso": 978674,
+      "total_bot": 16504,
+      "total_alertas": 995178,
+      "heap_mb": 973.9739303588867
+    }
+  ]
+}
